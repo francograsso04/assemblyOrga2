@@ -31,7 +31,22 @@ strPrint:
 	ret
 
 ; uint32_t strLen(char* a)
-strLen:
-	ret
 
+;RDI -> a
+strLen:
+    push rbp
+    mov rbp, rsp
+
+    xor rax, rax        ; contador de longitud = 0
+.loop:
+    mov al, byte [rdi]  ; leemos un byte (char) desde str
+    cmp al, 0           ; ¿es el terminador?
+    je .fin
+    inc rdi             ; avanzamos al siguiente carácter
+    inc rax             ; sumamos 1 a la longitud
+    jmp .loop
+
+.fin:
+    pop rbp
+    ret                 ; longitud queda en RAX
 
