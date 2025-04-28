@@ -14,6 +14,11 @@ extern strcmp
 
 ; uint8_t contar_pagos_aprobados_asm(list_t* pList, char* usuario);
 contar_pagos_aprobados_asm:
+    push rbp
+    mov rbp, rsp
+    
+    pop rbp
+    ret
 
 ; uint8_t contar_pagos_rechazados_asm(list_t* pList, char* usuario);
 contar_pagos_rechazados_asm:

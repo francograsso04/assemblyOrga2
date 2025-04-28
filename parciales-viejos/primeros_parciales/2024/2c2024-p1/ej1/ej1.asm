@@ -21,7 +21,7 @@ EJERCICIO_1A_HECHO: db TRUE ; Cambiar por `TRUE` para correr los tests.
 ; Funciones a implementar:
 ;   - indice_a_inventario
 global EJERCICIO_1B_HECHO
-EJERCICIO_1B_HECHO: db FALSE ; Cambiar por `TRUE` para correr los tests.
+EJERCICIO_1B_HECHO: db TRUE ; Cambiar por `TRUE` para correr los tests.
 
 ;########### ESTOS SON LOS OFFSETS Y TAMAÑO DE LOS STRUCTS
 ; Completar las definiciones (serán revisadas por ABI enforcer):
@@ -100,10 +100,6 @@ es_indice_ordenado:
 	mov r15, rcx
 	xor rbx,rbx 
 
-	; Si size < 2, no hay pares que comparar → true
-    cmp     r14, 2
-    jb      fin_verdadero
-
 	;Resto 1 al tamaño
 	sub r14,1
 
@@ -117,7 +113,7 @@ es_indice_ordenado:
 
 		;fijarse si anda este cmp
 		cmp rbx,r14
-		jge fin_verdadero ;Si rbx > r14, salta a "fin_verdadero"
+		jge fin_verdadero ;Si rbx >= r14, salta a "fin_verdadero"
 
 		;al contador lo multiplico por 2
 		imul r10, rbx, 2
@@ -179,12 +175,82 @@ es_indice_ordenado:
 ;;   ítems**
 
 global indice_a_inventario
+
+; item_t** indice_a_inventario(item_t** inventario, uint16_t* indice, uint16_t tamanio) {
+;     // Reservamos memoria para 'tamanio' punteros a 'item_t'
+;     item_t **ptr = malloc(tamanio * sizeof(item_t*)); 
+
+;     // Verificamos que la memoria se haya reservado correctamente
+;     if (ptr == NULL) {
+;         return NULL; // Si no se pudo reservar la memoria, devolvemos NULL
+;     }
+
+;     // Copiamos los punteros de inventario a ptr según los índices
+;     for (int i = 0; i < tamanio; i++) {
+;         ptr[i] = inventario[indice[i]];
+;     }
+
+;     return ptr;
+; }
 indice_a_inventario:
-	; Te recomendamos llenar una tablita acá con cada parámetro y su
-	; ubicación según la convención de llamada. Prestá atención a qué
-	; valores son de 64 bits y qué valores son de 32 bits o 8 bits.
-	;
-	; r/m64 = item_t**  inventario
-	; r/m64 = uint16_t* indice
-	; r/m16 = uint16_t  tamanio
+
+	;RDI -> inventario 
+	;RSI ->indice
+	;RDX -> tamanio (solo usa dx)
+
+	push rbp
+	mov rbp,rsp
+	push r12
+	push r13
+	push r14
+	push r15
+	push rbx
+
+	mov r12, rdi
+	mov r13, rsi
+	mov r14, rdx
+	xor r15,r15
+
+
+	xor rdi,rdi
+	mov rdi, rdx 
+	imul rdi, 8
+
+	call malloc
+	;Ahora en rax tengo la pos de memoria de la memoria libre!
+	;deberia ir agregando a cada posicion de la nueva memoria inventario[indice[i]]
+
+
+	;Tengo
+	;R12 ->Inventario
+	;R13 -> Indice
+	;R14 -> tamaño
+	;R15 -> contador
+	ciclo_2:
+		cmp r15, r14
+		jge fin_2 ;Si r15 >= r14 
+		
+		imul r10, r15, 2 
+		;Necesito obtener r8 = indice[i]
+		mov r8w, [r13 + r10]
+		movzx r8, r8w   
+
+		;Ahora necesito r11 = inventario[r8]
+		 
+		 mov r11, [r12+r8*8]; esto es inventario[indice[i]]
+
+		 ;Ahora a r11 lo debo guardar en: contador*8
+		 mov [rax + r15*8], r11
+		 inc r15
+		 jmp ciclo_2
+
+	fin_2:
+
+	pop rbx
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop rbp
+	
 	ret

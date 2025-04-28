@@ -282,8 +282,8 @@ void test_1a_optimizo_inst_optimizada() {
 
 void test_1a_mapa_completo(uint64_t successful_at_start) {
 	if (successful_tests - successful_at_start < 4) {
-		printf(FAIL "El test sobre el mapa completo se ejecutará cuando pasen los tests anteriores.\n");
-		return;
+		// printf(FAIL "El test sobre el mapa completo se ejecutará cuando pasen los tests anteriores.\n");
+		// return;
 	}
 	mapa_t mapa = {0};
 	mapa[0][0] = malloc(sizeof(attackunit_t));

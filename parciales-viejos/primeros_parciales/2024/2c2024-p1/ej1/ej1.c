@@ -18,7 +18,7 @@ bool EJERCICIO_1A_HECHO = true;
  * Funciones a implementar:
  *   - indice_a_inventario
  */
-bool EJERCICIO_1B_HECHO = false;
+bool EJERCICIO_1B_HECHO = true;
 
 /**
  * OPCIONAL: implementar en C
@@ -46,7 +46,18 @@ bool es_indice_ordenado(item_t** inventario, uint16_t* indice, uint16_t tamanio,
  * OPCIONAL: implementar en C
  */
 item_t** indice_a_inventario(item_t** inventario, uint16_t* indice, uint16_t tamanio) {
-	// ¿Cuánta memoria hay que pedir para el resultado?
-	item_t** resultado;
-	return resultado;
+    // Reservamos memoria para 'tamanio' punteros a 'item_t'
+    item_t **ptr = malloc(tamanio * 8); 
+
+    // Verificamos que la memoria se haya reservado correctamente
+    if (ptr == NULL) {
+        return NULL; // Si no se pudo reservar la memoria, devolvemos NULL
+    }
+
+    // Copiamos los punteros de inventario a ptr según los índices
+    for (int i = 0; i < tamanio; i++) {
+        ptr[i] = inventario[indice[i]];
+    }
+
+    return ptr;
 }

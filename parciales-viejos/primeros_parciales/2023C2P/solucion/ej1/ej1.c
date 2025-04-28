@@ -34,7 +34,51 @@ void listDelete(list_t* pList){
     free(pList);
 }
 
+// typedef struct
+// {
+//     uint8_t monto;
+//     uint8_t aprobado;
+//     char *pagador;
+//     char *cobrador;
+// } pago_t;
+
+// typedef struct
+// {
+//     uint8_t cant_aprobados;
+//     uint8_t cant_rechazados;
+//     pago_t **aprobados;
+//     pago_t **rechazados;
+// } pagoSplitted_t;
+
+// /* List */
+
+// typedef struct s_listElem
+// {
+//     pago_t *data;
+//     struct s_listElem *next;
+//     struct s_listElem *prev;
+// } listElem_t;
+
+// typedef struct s_list
+// {
+//     struct s_listElem *first;
+//     struct s_listElem *last;
+// } list_t;
+
 uint8_t contar_pagos_aprobados(list_t* pList, char* usuario){
+    //Debo contar los pagos aprobados
+    uint8_t pagos_aprobados=0;
+
+    //Desreferencio.
+    listElem_t *nodo = (*pList).first;
+
+    while(nodo != NULL){
+        if (nodo->data->aprobado != 0){
+            pagos_aprobados++;
+        }
+        nodo = nodo->next;
+    }
+    return pagos_aprobados;
 }
 
 uint8_t contar_pagos_rechazados(list_t* pList, char* usuario){
