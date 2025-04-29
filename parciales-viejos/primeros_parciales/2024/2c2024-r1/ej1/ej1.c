@@ -41,15 +41,18 @@ void optimizar(mapa_t mapa,
     for (int i = 0; i <= longitud; i++) {
         for (int j = 0; j < longitud; j++) {
             attackunit_t* elemento_actual = mapa[i][j];
-            // 1) Si la celda está vacía, continúa
-            if (elemento_actual == NULL) 
+            if(elemento_actual == NULL || compartida == elemento_actual){
                 continue;
+            }
             if (fun_hash(elemento_actual) == hash_compartido) {
                 // 5) Reemplaza el puntero en el mapa
                 mapa[i][j] = compartida;
-
+                elemento_actual->references--;
                 // 6) Incrementa el contador de la unidad compartida
                 compartida->references++;
+                if(elemento_actual->references == 0){
+                    free(elemento_actual);
+                }
             }
         }
     }
