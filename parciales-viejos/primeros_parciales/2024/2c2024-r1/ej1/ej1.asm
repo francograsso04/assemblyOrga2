@@ -21,7 +21,7 @@ EJERCICIO_1A_HECHO: db TRUE ; Cambiar por `TRUE` para correr los tests.
 ; Funciones a implementar:
 ;   - contarCombustibleAsignado
 global EJERCICIO_1B_HECHO
-EJERCICIO_1B_HECHO: db FALSE ; Cambiar por `TRUE` para correr los tests.
+EJERCICIO_1B_HECHO: db TRUE ; Cambiar por `TRUE` para correr los tests.
 
 ; Marca el ejercicio 1C como hecho (`true`) o pendiente (`false`).
 ;
@@ -163,9 +163,113 @@ optimizar:
 	ret
 
 global contarCombustibleAsignado
+
+
+
+; uint32_t contarCombustibleAsignado(mapa_t mapa, uint16_t (*fun_combustible)(char*)) {
+;     uint32_t combustible_asignado = 0;
+;     const int longitud = 255;
+
+;     for (int i = 0; i < longitud; i++ ){
+;         for (int j = 0; j < longitud; j++){
+;             attackunit_t* elemento_actual = mapa[i][j];
+;             if (elemento_actual == NULL) continue;
+
+;             uint16_t combustible_de_elemento_actual = elemento_actual->combustible;
+;             uint16_t combustible_base_de_elemento_actual = fun_combustible(elemento_actual->clase);
+
+;             if (combustible_de_elemento_actual > combustible_base_de_elemento_actual){
+;                 uint16_t diferencia_de_combustible = combustible_de_elemento_actual - combustible_base_de_elemento_actual;
+;                 combustible_asignado += diferencia_de_combustible;
+;             }
+;         }
+;     }   
+;     return combustible_asignado;
+; }
 contarCombustibleAsignado:
-	; r/m64 = mapa_t           mapa
-	; r/m64 = uint16_t*        fun_combustible(char*)
+;RDI -> mapa
+;RSI -> FUNCION QUE RECIBE CHAR
+; uint32_t contarCombustibleAsignado(mapa_t mapa, uint16_t (*fun_combustible)(char*)) {
+	push rbp
+	mov rbp,rsp
+	push r12
+	push r13
+	push rbx
+	push r14
+	push r15
+	sub rsp,8
+
+	mov r12, rdi
+	mov r13, rsi
+
+	xor rbx,rbx
+	xor r14,r14
+	.ciclo:
+		cmp rbx, (FILAS*COLUMNAS)
+		jge .fin 
+
+		;R12 -> MAPA
+		;R13 -> funcion
+		;RBX -> contador
+
+		;M[i][j]
+		mov r8, [r12 + rbx*8]
+
+		;si es null continue
+		cmp r8,0
+		je .reinicioCiclo 
+		
+		mov r15w, [r8 + ATTACKUNIT_COMBUSTIBLE]; r15 = combustible_elem_actual
+
+		;EL PUNTERO PARA LA FUNCION ESTA EN R8+ATTACKUNIT!!!!
+		;Me costo darme cuenta, pero esos char[11] son 11 bytes en memoria, 
+		;si tenes la direccion del primer elemento, directamente acordate que
+		;se itera cada posicion por cada char, hasta llegar al padding
+		mov rdi, r8 + ATTACKUNIT_CLASE
+
+		;LA FUNCION RECIBE UN PUNTERO A CHAR
+
+		call r13 
+
+		;el resultado esta en ax
+
+		cmp r15w, ax
+		jg .casoDiferencia
+
+		;sino 
+		jmp .reinicioCiclo 
+
+	.casoDiferencia:
+		;Estoy con
+		; r15w es el combustible_actual en 16 bits
+		; ax es el combustible_ base en 16 bits
+
+		movzx r15d, r15w     ; Extiende r15w a r15d (32 bits)
+		movzx eax, ax        ; Extiende ax a eax (32 bits)
+
+		xor r10, r10
+		add r10d, r15d
+		sub r10d, eax 
+		add r14d, r10d
+
+		
+	.reinicioCiclo:
+		inc rbx
+		jmp .ciclo
+
+	.fin:
+	mov eax, r14d
+
+	add rsp,8
+	pop r15
+	pop r14
+	pop rbx 
+	pop r13
+	pop r12
+	pop rbp 
+
+
+
 	ret
 
 global modificarUnidad

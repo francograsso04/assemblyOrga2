@@ -66,22 +66,37 @@ void listDelete(list_t* pList){
 // } list_t;
 
 uint8_t contar_pagos_aprobados(list_t* pList, char* usuario){
+    if (!usuario || !pList) return 0;
     //Debo contar los pagos aprobados
-    uint8_t pagos_aprobados=0;
+    uint8_t pagos_aprobados_de_usuario = 0;
 
     //Desreferencio.
     listElem_t *nodo = (*pList).first;
 
     while(nodo != NULL){
-        if (nodo->data->aprobado != 0){
-            pagos_aprobados++;
+        if (nodo->data->aprobado != 0 && strcmp(nodo->data->pagador, usuario) == 0){
+            pagos_aprobados_de_usuario++;
         }
         nodo = nodo->next;
     }
-    return pagos_aprobados;
+    return pagos_aprobados_de_usuario;
 }
 
 uint8_t contar_pagos_rechazados(list_t* pList, char* usuario){
+    if (!usuario || !pList) return 0;
+    //Debo contar los pagos aprobados
+    uint8_t pagos_rechazados_de_usuario = 0;
+
+    //Desreferencio.
+    listElem_t *nodo = (*pList).first;
+
+    while(nodo != NULL){
+        if (nodo->data->aprobado == 0 && strcmp(nodo->data->pagador, usuario) == 0){
+            pagos_rechazados_de_usuario++;
+        }
+        nodo = nodo->next;
+    }
+    return pagos_rechazados_de_usuario;
 }
 
 pagoSplitted_t* split_pagos_usuario(list_t* pList, char* usuario){

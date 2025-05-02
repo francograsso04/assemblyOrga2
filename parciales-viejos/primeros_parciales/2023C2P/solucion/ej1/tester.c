@@ -18,7 +18,7 @@ int main() {
 	srand(0);
     remove(filename_ej1);
     test_ej1a(filename_ej1);
-	test_ej1b(filename_ej1);
+	//test_ej1b(filename_ej1);
 	return 0;
 }
 
@@ -34,7 +34,7 @@ void test_ej1a(char* filename) {
     
     uint8_t (*func_contar_aprobados)(list_t*, char*);
     uint8_t (*func_contar_rechazados)(list_t*, char*);
-    if (USE_ASM_IMPL){
+    if (0){
         func_contar_aprobados = contar_pagos_aprobados_asm;
         func_contar_rechazados = contar_pagos_rechazados_asm;
     }else{
@@ -77,7 +77,7 @@ void test_ej1a(char* filename) {
 void test_ej1b(char* filename) {
     
     pagoSplitted_t* (*func_split)(list_t*, char*);
-    if (USE_ASM_IMPL){
+    if (0){
         func_split = split_pagos_usuario_asm;
     }else{
         func_split = split_pagos_usuario;
