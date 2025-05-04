@@ -9,17 +9,17 @@
 
 /** Lista **/
 typedef struct string_proc_list_t {
-	struct string_proc_node_t* first;
-	struct string_proc_node_t* last;
-} string_proc_list;
+	struct string_proc_node_t* first; //0
+	struct string_proc_node_t* last; // 8
+} string_proc_list; // 16
 
 /** Nodo **/
 typedef struct string_proc_node_t {
-	struct string_proc_node_t* next;
-	struct string_proc_node_t* previous;
-	uint8_t type;
-	char* hash;
-} string_proc_node;
+	struct string_proc_node_t* next;//0
+	struct string_proc_node_t* previous; //8
+	uint8_t type;//16
+	char* hash;//24
+} string_proc_node; //32
        
 /** Funciones a implementar:  **/
 string_proc_list* string_proc_list_create(void);
