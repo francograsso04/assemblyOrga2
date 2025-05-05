@@ -43,34 +43,15 @@ void string_proc_list_add_node(string_proc_list* list, uint8_t type, char* hash)
 
 
 char* string_proc_list_concat(string_proc_list* list, uint8_t type, char* hash) {
-    size_t total_len = strlen(hash);  // empezar con la longitud del hash original
-
-    // 1. Recorrer la lista y sumar longitudes de los hashes con type coincidente
-    string_proc_node* current = list->first;
-    while (current != NULL) {
-        if (current->type == type && current->hash != NULL) {
-            total_len += strlen(current->hash);
+    string_proc_node* actual_node = list->first;
+    char* res = hash;
+    while(actual_node != NULL){
+        if(actual_node->type == type){
+            res=str_concat(res,actual_node->hash);
         }
-        current = current->next;
+        actual_node = actual_node->next;
     }
-
-    // 2. Reservar memoria para el resultado (incluye '\0')
-    char* result = malloc(total_len + 1);
-    if (result == NULL) return NULL;
-
-    // 3. Copiar el hash original
-    strcpy(result, hash);
-
-    // 4. Volver a recorrer la lista para concatenar los hashes válidos
-    current = list->first;
-    while (current != NULL) {
-        if (current->type == type && current->hash != NULL) {
-            strcat(result, current->hash);
-        }
-        current = current->next;
-    }
-
-    return result;
+    return res;
 }
 
 

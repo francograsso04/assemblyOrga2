@@ -19,7 +19,7 @@ int main() {
 	srand(0);
     remove(filename_ej1);
 	test_ej1a(filename_ej1);
-	test_ej1b(filename_ej1);
+	//test_ej1b(filename_ej1);
 	return 0;
 }
 

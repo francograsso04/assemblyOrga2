@@ -13,7 +13,7 @@ section .text
 
 ;rdi-> temploArr
 ;rsi -> temploArr_len
-templosClasicos:
+cuantosTemplosClasicos:
     push rbp
     mov rbp, rsp
     push rbx
@@ -38,7 +38,7 @@ templosClasicos:
     jge .fin
 
     xor r10,r10
-    imul r10,rcx, 24 ;Indice De Lista
+    imul r10,rcx, TEMPLO_SIZE ;Indice De Lista
     
     ;r14 = r12 + r10 (no quiero desreferenciar)
     mov r14, r12
@@ -84,8 +84,10 @@ templosClasicos:
     ret
 
 
+templosClasicos:
+    ;rdi-> temploArr
+    ;rsi -> temploArr_len
 
-cuantosTemplosClasicos:
     push rbp
     mov rbp, rsp
     push rbx
@@ -99,21 +101,20 @@ cuantosTemplosClasicos:
     mov r13, rsi
 
     xor rbx,rbx
-    xor rcx,rcx
     xor r15,r15
     xor r14,r14
 
     ;debo hacer malloc, ya los parametros estan
 
     ;Llamo templosClasicos
-    call templosClasicos
+    call cuantosTemplosClasicos
 
     ;Muevo resultado a r8d
     mov r8d, eax
 
     mov edi, eax
 
-    imul edi, edi, 28 
+    imul edi, edi, TEMPLO_SIZE 
 
     call malloc
 
@@ -126,7 +127,8 @@ cuantosTemplosClasicos:
     ;r15 -> Apunta al primer elemento del array rtta
     ;rbx -> El que apunta al array respuesta (incrementandose)
     
-    
+    xor r8,r8
+    xor rcx,rcx
     .cicloA:
 
     cmp rcx, r13 ;si contador >= lista_len
@@ -134,7 +136,7 @@ cuantosTemplosClasicos:
 
     xor r10,r10
 
-    imul r10,rcx, 24 ;Indice De Lista
+    imul r10,rcx, TEMPLO_SIZE ;Indice De Lista
     
     ;r14 = r12 + r10 (no quiero desreferenciar)
     mov r14, r12
@@ -162,11 +164,11 @@ cuantosTemplosClasicos:
     cmp r8d, r9d                     ; si colum_largo_actual == (2*colum_corto_actual+1)
     jne .siguienteIteracionA           ; si no es igual, ir a la siguiente iteración
 
+    dec r9d
+    shr r9d,1
     ; Cuando colum_largo_actual == (2*colum_corto_actual+1)
-    ; Copiar temploArr[i] a arrayTemplo[numeroDeTemplosClasicosAgregados]
-    ; numeroDeTemplosClasicosAgregados++
-    
-    imul r10, rbx, 24                 ; r10 = rbx * 24 (índice del array, ya que cada struct es de 24 bytes)
+
+    imul r10, rbx, TEMPLO_SIZE                 ; r10 = rbx * 24 (índice del array, ya que cada struct es de 24 bytes)
 
     ; Copiar colum_largo_actual (r8b) a arrayTemplo[numeroDeTemplosClasicosAgregados]
     mov [r15 + r10 + COLUM_LARGO_OFFSET], r8b

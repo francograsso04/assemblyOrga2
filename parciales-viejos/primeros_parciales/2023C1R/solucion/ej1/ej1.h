@@ -14,11 +14,11 @@
 #define USE_ASM_IMPL 1
 
 typedef struct pago {
-  uint8_t monto;
-  char* comercio;
-  uint8_t cliente;
-  uint8_t aprobado;
-} pago_t; 
+  uint8_t monto;//0
+  char* comercio;//8
+  uint8_t cliente;//16
+  uint8_t aprobado;//17
+} pago_t; //24
 
 
 uint32_t* acumuladoPorCliente(uint8_t cantidadDePagos, pago_t* arr_pagos);
